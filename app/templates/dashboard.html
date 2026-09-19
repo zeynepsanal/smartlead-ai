@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gracia — Yönetim Paneli</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background: #f7f2f0;
+    padding: 40px 16px;
+  }
+  header {
+    max-width: 1000px;
+    margin: 0 auto 24px auto;
+  }
+  h1 {
+    font-size: 24px;
+    color: #2b2b2b;
+  }
+  p.alt {
+    font-size: 13px;
+    color: #8a7a7c;
+    margin-top: 4px;
+  }
+  .tablo-kart {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  th, td {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid #f0e8e8;
+  }
+  th {
+    background: #2b2b2b;
+    color: #fff;
+    font-weight: 600;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fbf5f4; }
+  #durum-mesaji {
+    max-width: 1000px;
+    margin: 16px auto 0 auto;
+    font-size: 13px;
+    color: #8a7a7c;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Gracia — Gelen Kayıtlar</h1>
+  <p class="alt">Sohbet üzerinden iletişim bilgisi bırakan ziyaretçiler</p>
+</header>
+
+<div class="tablo-kart">
+  <table>
+    <thead>
+      <tr>
+        <th>İsim</th>
+        <th>Telefon</th>
+        <th>Mesaj</th>
+        <th>Tarih</th>
+      </tr>
+    </thead>
+    <tbody id="lead-govde"></tbody>
+  </table>
+</div>
+<div id="durum-mesaji">Yükleniyor...</div>
+
+<script>
+  async function leadleriGetir() {
+    const govde = document.getElementById('lead-govde');
+    const durum = document.getElementById('durum-mesaji');
+
+    try {
+      const yanit = await fetch('/api/leads');
+      const veri = await yanit.json();
+
+      if (!veri.basari) {
+        durum.textContent = veri.hata || 'Kayıtlar getirilemedi.';
+        return;
+      }
+
+      const leadler = veri.leadler || [];
+      if (leadler.length === 0) {
+        durum.textContent = 'Henüz kayıt yok.';
+        return;
+      }
+
+      govde.innerHTML = '';
+      leadler.forEach((lead) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML =
+          '<td>' + (lead.isim || '') + '</td>' +
+          '<td>' + (lead.telefon || '') + '</td>' +
+          '<td>' + (lead.mesaj || '-') + '</td>' +
+          '<td>' + (lead.tarih || '') + '</td>';
+        govde.appendChild(tr);
+      });
+      durum.textContent = leadler.length + ' kayıt bulundu.';
+    } catch (hata) {
+      durum.textContent = 'Sunucuya bağlanılamadı.';
+    }
+  }
+
+  leadleriGetir();
+</script>
+
+</body>
+</html>
