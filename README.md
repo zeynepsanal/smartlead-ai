@@ -1,4 +1,5 @@
 # SmartLead AI — Gracia Akıllı Satış Asistanı
+**Canlı demo:** https://smartlead-ai-oh15.onrender.com
 
 Gracia, her bedenden insanın rahat ve estetik spor kıyafetlerine ulaşmasını hedefleyen bir spor tekstil markasıdır. Bu proje, Gracia'nın internet sitesinde ziyaretçilerle yapay zekâ üzerinden sohbet eden ve iletişim bilgilerini (lead) toplayan bir asistandır.
 
